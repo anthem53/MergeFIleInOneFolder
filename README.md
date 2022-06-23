@@ -2,5 +2,5 @@
 
 ## environment
 
-*python 3.10
-*pyqt5
+* python 3.10
+* pyqt5
