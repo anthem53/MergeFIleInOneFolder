@@ -26,7 +26,8 @@ class WindowClass(QMainWindow, form_class):
 
         print(fname)
         self.targetFolderAddress.setText(fname)
-        self.saveFolderAddress.setText(fname+"/Result")
+        if fname != "":
+            self.saveFolderAddress.setText(fname+"/Result")
 
     def searchButtonClick(self):
         fname = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
