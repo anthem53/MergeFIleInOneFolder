@@ -5,14 +5,15 @@ import sys
 
 
 count = 0
-def  merge (rootfolder, targetfolder=os.getcwd()+"\\test"):
+
+def  merge (rootfolder, targetfolder):
     global count
     print(targetfolder)
 
     fileList = []
     for filename in os.listdir(rootfolder):
-        if filename == "Result":
-            continue
+        
+
         temp = []
         if temp == [] :
             temp = re.findall("\d+-\d+",filename)
@@ -34,17 +35,27 @@ def  merge (rootfolder, targetfolder=os.getcwd()+"\\test"):
             
         if temp == []:
             temp = re.findall("\d+",filename)
+
+        if temp == [] :
+            temp = [-1]
         fileList.append((filename, float(temp[0])))
     fileList.sort(key=lambda x : x[1])
-    print(fileList)
+   
 
     for fileName , fileNum in fileList:
+
+        if fileNum == -1:
+            continue
+
         fileAddress = rootfolder + "\\" + fileName
         
         if os.path.isfile(fileAddress):
             print("[FILE]"+fileAddress)
             name, extension = os.path.splitext(fileAddress)
-            shutil.copyfile(fileAddress,targetfolder+"\\"+str(count)+extension)
+            try: 
+                shutil.copyfile(fileAddress,targetfolder+"\\"+str(count)+extension)
+            except shutil.SameFileError :
+                pass
             count += 1
 
         elif os.path.isdir(fileAddress):
@@ -54,4 +65,4 @@ def  merge (rootfolder, targetfolder=os.getcwd()+"\\test"):
 
 if __name__ == "__main__":
 
-    merge(rootfolder="E:\Entertainment\만화\[미나모토 아키라] 여왕 폐하의 이세계 전략")
+    pass
