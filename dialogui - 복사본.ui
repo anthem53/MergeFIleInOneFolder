@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>811</width>
-    <height>646</height>
+    <width>917</width>
+    <height>753</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,53 +17,17 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="4" column="1" colspan="3">
-       <widget class="QLineEdit" name="logText">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="4">
+      <item row="6" column="0" colspan="5">
        <widget class="QListWidget" name="targetFolderList"/>
       </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="QLabel" name="label">
-        <property name="font">
-         <font>
-          <family>나눔명조OTF ExtraBold</family>
-          <pointsize>22</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Target Folder</string>
+      <item row="9" column="1" colspan="4">
+       <widget class="QLineEdit" name="logText">
+        <property name="readOnly">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="QPushButton" name="mergeButton">
-        <property name="text">
-         <string>Merge</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QPushButton" name="findButton">
-        <property name="text">
-         <string>Find</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="4">
-       <widget class="QProgressBar" name="progressBar">
-        <property name="value">
-         <number>24</number>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="label_2">
         <property name="font">
          <font>
@@ -78,17 +42,53 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_3">
+      <item row="2" column="4">
+       <widget class="QPushButton" name="findButton">
         <property name="text">
-         <string/>
+         <string>Find</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="2" colspan="2">
+      <item row="2" column="0" colspan="2">
+       <widget class="QLabel" name="label">
+        <property name="font">
+         <font>
+          <family>나눔명조OTF ExtraBold</family>
+          <pointsize>22</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Target Folder</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0" colspan="2">
+       <widget class="QPushButton" name="mergeButton">
+        <property name="text">
+         <string>Merge</string>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="2" colspan="3">
        <widget class="QPushButton" name="clearButton">
         <property name="text">
          <string>Clear</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0" colspan="5">
+       <widget class="QProgressBar" name="progressBar">
+        <property name="value">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="testButton">
+        <property name="text">
+         <string>testButton</string>
         </property>
        </widget>
       </item>
@@ -101,7 +101,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>811</width>
+     <width>917</width>
      <height>21</height>
     </rect>
    </property>

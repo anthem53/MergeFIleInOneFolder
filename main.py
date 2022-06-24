@@ -32,6 +32,7 @@ class WindowClass(QMainWindow, form_class):
         self.findButton.clicked.connect(self.findButtonClick3)
         self.mergeButton.clicked.connect(self.mergeButtonClick)
         self.clearButton.clicked.connect(self.clearButtonClick)
+        self.testButton.clicked.connect(self.testButtonClick)
 
         self.progressBar.setValue(0)
         
@@ -68,14 +69,25 @@ class WindowClass(QMainWindow, form_class):
 
         for i in range(self.targetFolderList.count()):
             currentRootAddress = self.targetFolderList.item(i).text()
+            dirList = currentRootAddress.split("/")
+            dirName = dirList[-1]
+            rootfolder = "/".join(dirList[0:-1])
+            savedfolderName = "(Merged)"+dirName
 
             if currentRootAddress == "":
                 continue
             if "Result" not in os.listdir(currentRootAddress):
                 os.mkdir(currentRootAddress+"/"+"Result")
+            if dirName not in os.listdir(currentRootAddress):
+                os.mkdir(currentRootAddress+"/"+dirName)
+            if dirName + "(Merged)" not in os.listdir(rootfolder):
+                os.mkdir(rootfolder + "/"+ savedfolderName)
                 
             self.logText.setText(currentRootAddress)
-            currentSaveFolder = currentRootAddress + "/Result"
+
+            
+
+            currentSaveFolder = rootfolder + "/"+savedfolderName
             folderSearch.count = 0 
             folderSearch.merge(currentRootAddress,currentSaveFolder)
             progressValue = math.ceil((i+1)/self.targetFolderList.count()*100)
@@ -85,6 +97,11 @@ class WindowClass(QMainWindow, form_class):
         self.logText.setText('작업 완료 했습니다.')
     def clearButtonClick(self):
         self.targetFolderList.clear()
+
+    def testButtonClick(self):
+        print("testButton Clicked")
+        pass
+        pass
     def updatePbar(self, value):
         self.progressBar.setValue(value)
 if __name__ == "__main__":
