@@ -1,3 +1,4 @@
+from operator import truediv
 import os
 import re
 import shutil
@@ -10,7 +11,7 @@ from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QMainWindow,
                              QTextEdit, QMessageBox,QListView,QTreeView,QFileSystemModel,QAbstractItemView)
 
 
-form_class = uic.loadUiType("dialogui - 복사본.ui")[0]
+form_class = uic.loadUiType("pyqtUI.ui")[0]
 
 
 class FileDialog(QFileDialog):
@@ -29,41 +30,28 @@ class WindowClass(QMainWindow, form_class):
         self.fileDialog = FileDialog()
         
         self.setupUi(self)
-        self.findButton.clicked.connect(self.findButtonClick3)
+        self.findButton.clicked.connect(self.findButtonClick)
         self.mergeButton.clicked.connect(self.mergeButtonClick)
         self.clearButton.clicked.connect(self.clearButtonClick)
         self.testButton.clicked.connect(self.testButtonClick)
-
+        self.targetFolderList.itemDoubleClicked.connect(self.targetFolderListDoubleClick)
         self.progressBar.setValue(0)
         
+
     def findButtonClick(self):
-        print("findButtonClick 클릭됨.")
-        fname = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-
-        print(fname)
-        self.targetFolderAddress.setText(fname)
-        if fname != "":
-            self.saveFolderAddress.setText(fname+"/Result")
-    def findButtonClick2(self):
-        files = self.fileDialog.getOpenFileNames(self)
-
-        for file in files[0] :
-            print(file,type(file))
-            self.targetFolderList.addItem(file)
-
-        for i in range(self.targetFolderList.count()):
-            print(self.targetFolderList.item(i).text())
-
-        pass
-        pass
-
-    def findButtonClick3(self):
         self.fileDialog.show()
         self.fileDialog.exec_()
         
         for file in self.fileDialog.selectedFiles():
             print(type(file),file)
-            self.targetFolderList.addItem(file)
+            isExisted = False
+            for i in range(self.targetFolderList.count()):
+                temp = self.targetFolderList.item(i).text()
+                if  temp == file:
+                    isExisted = True
+                    break 
+            if isExisted == False:
+                self.targetFolderList.addItem(file)
 
     def mergeButtonClick(self):
 
@@ -102,8 +90,14 @@ class WindowClass(QMainWindow, form_class):
         print("testButton Clicked")
         pass
         pass
+
+    def targetFolderListDoubleClick(self):
+        self.targetFolderList.takeItem(self.targetFolderList.currentRow())
+
     def updatePbar(self, value):
         self.progressBar.setValue(value)
+
+    
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     myWindow = WindowClass()

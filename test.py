@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QMainWindow,
                              QTextEdit, QMessageBox,QListView,QTreeView,QFileSystemModel,QAbstractItemView)
 
 
-form_class = uic.loadUiType("dialogui - 복사본.ui")[0]
+form_class = uic.loadUiType("pyqtUI.ui")[0]
 
 
 class FileDialog(QFileDialog):
