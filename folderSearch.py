@@ -53,7 +53,7 @@ def  merge (rootfolder, targetfolder):
             print("[FILE]"+fileAddress)
             name, extension = os.path.splitext(fileAddress)
             try: 
-                shutil.copyfile(fileAddress,targetfolder+"\\"+str(count)+extension)
+                shutil.copyfile(fileAddress,targetfolder+"\\"+str(count).zfill(6)+extension)
             except shutil.SameFileError :
                 pass
             count += 1

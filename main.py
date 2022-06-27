@@ -64,12 +64,14 @@ class WindowClass(QMainWindow, form_class):
 
             if currentRootAddress == "":
                 continue
-            if "Result" not in os.listdir(currentRootAddress):
-                os.mkdir(currentRootAddress+"/"+"Result")
-            if dirName not in os.listdir(currentRootAddress):
-                os.mkdir(currentRootAddress+"/"+dirName)
+            #if dirName not in os.listdir(currentRootAddress):
+                #os.mkdir(currentRootAddress+"/"+dirName)
             if dirName + "(Merged)" not in os.listdir(rootfolder):
-                os.mkdir(rootfolder + "/"+ savedfolderName)
+                try:
+                    os.mkdir(rootfolder + "/"+ savedfolderName)
+                except FileExistsError:
+                    shutil.rmtree(os.path.join(rootfolder + "/"+ savedfolderName))
+                    os.mkdir(rootfolder + "/"+ savedfolderName)
                 
             self.logText.setText(currentRootAddress)
 
