@@ -5,6 +5,7 @@ import shutil
 import sys
 import folderSearch
 import math
+import webbrowser
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QMainWindow,
@@ -19,10 +20,14 @@ class FileDialog(QFileDialog):
         QFileDialog.__init__(self, *args)
         self.setOption(self.DontUseNativeDialog, True)
         self.setFileMode(self.DirectoryOnly)
-
+        
         for view in self.findChildren((QListView, QTreeView)):
             if isinstance(view.model(), QFileSystemModel):
                 view.setSelectionMode(QAbstractItemView.ExtendedSelection)
+class FolderDialog (QFileDialog):
+    def __init__ (self, * args):
+        QFileDialog.__init__(self, *args)
+
 
 class WindowClass(QMainWindow, form_class):
     def __init__(self):
@@ -33,7 +38,8 @@ class WindowClass(QMainWindow, form_class):
         self.findButton.clicked.connect(self.findButtonClick)
         self.mergeButton.clicked.connect(self.mergeButtonClick)
         self.clearButton.clicked.connect(self.clearButtonClick)
-        self.testButton.clicked.connect(self.testButtonClick)
+        self.mergeToOneButton.clicked.connect(self.mergeToOneButtonClick)
+       
         self.targetFolderList.itemDoubleClicked.connect(self.targetFolderListDoubleClick)
         self.progressBar.setValue(0)
         
@@ -72,11 +78,11 @@ class WindowClass(QMainWindow, form_class):
                 except FileExistsError:
                     shutil.rmtree(os.path.join(rootfolder + "/"+ savedfolderName))
                     os.mkdir(rootfolder + "/"+ savedfolderName)
+        
                 
             self.logText.setText(currentRootAddress)
 
-            
-
+        
             currentSaveFolder = rootfolder + "/"+savedfolderName
             folderSearch.count = 0 
             folderSearch.merge(currentRootAddress,currentSaveFolder)
@@ -85,6 +91,33 @@ class WindowClass(QMainWindow, form_class):
         QMessageBox.about(self, 'Process Complete', '작업 완료 했습니다.')
         print('작업 완료 했습니다.')
         self.logText.setText('작업 완료 했습니다.')
+    def mergeToOneButtonClick(self):
+        saveDirectory = os.path.realpath(QFileDialog.getExistingDirectory(self, "파일을 저장할 폴더를 선택하시오."))
+        self.logText.setText("현주소 %s " % saveDirectory )
+
+
+        for i in range(self.targetFolderList.count()):
+            currentRootAddress = self.targetFolderList.item(i).text()
+            dirList = currentRootAddress.split("/")
+            dirName = dirList[-1]
+            rootfolder = "/".join(dirList[0:-1])
+            savedfolderName = "(Merged)"+dirName
+
+            if currentRootAddress == "":
+                continue
+                
+            self.logText.setText(currentRootAddress)
+        
+            currentSaveFolder = saveDirectory
+            folderSearch.count = 0 
+            folderSearch.merge(currentRootAddress,currentSaveFolder)
+            progressValue = math.ceil((i+1)/self.targetFolderList.count()*100)
+            self.progressBar.setValue(progressValue)
+        webbrowser.open("\"%s\"" % saveDirectory)
+        QMessageBox.about(self, 'Process Complete', '작업 완료 했습니다.')
+        print('작업 완료 했습니다.')
+        self.logText.setText('작업 완료 했습니다.')
+
     def clearButtonClick(self):
         self.targetFolderList.clear()
 

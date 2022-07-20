@@ -1,91 +1,91 @@
-import os
-import re
-import shutil
 import sys
-import folderSearch
-
-from PyQt5 import uic
-from PyQt5.QtWidgets import (QAction, QApplication, QFileDialog, QMainWindow,
-                             QTextEdit, QMessageBox,QListView,QTreeView,QFileSystemModel,QAbstractItemView)
+from PyQt5 import QtCore
+from PyQt5.QtWidgets import *
 
 
-form_class = uic.loadUiType("pyqtUI.ui")[0]
+class MyApp(QWidget):
 
-
-class FileDialog(QFileDialog):
-    def __init__(self, *args):
-        QFileDialog.__init__(self, *args)
-        self.setOption(self.DontUseNativeDialog, True)
-        self.setFileMode(self.DirectoryOnly)
-
-        for view in self.findChildren((QListView, QTreeView)):
-            if isinstance(view.model(), QFileSystemModel):
-                view.setSelectionMode(QAbstractItemView.ExtendedSelection)
-
-class WindowClass(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
-        self.fileDialog = FileDialog()
+        self.initUI()
+
+    def initUI(self):
+        ######UI 세팅########
+        self.tableWidget = QTableWidget()
+        self.tableWidget.setRowCount(2)
+        self.tableWidget.setColumnCount(2)
+
+        self.tableWidget.setItem(0, 0, QTableWidgetItem('Apple'))
+        self.tableWidget.setItem(0, 1, QTableWidgetItem('Banana'))
+        self.tableWidget.setItem(1, 0, QTableWidgetItem('Orange'))
+        self.tableWidget.setItem(1, 1, QTableWidgetItem('Grape'))
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.tableWidget)
+        self.setLayout(layout)
+
+        self.setWindowTitle('PyQt5 - QTableWidget')
+        self.setGeometry(300, 100, 600, 400)
+        self.show()
+        ######################
         
-        self.setupUi(self)
-        self.findButton.clicked.connect(self.findButtonClick3)
-        self.mergeButton.clicked.connect(self.mergeButtonClick)
-        self.clearButton.clicked.connect(self.clearButtonClick)
+
+        # 메뉴바 활성화
+        self.tableWidget.setContextMenuPolicy(QtCore.Qt.ContextMenuPolicy.CustomContextMenu)
+        # 우클릭시 메뉴바 생성
+        self.tableWidget.customContextMenuRequested.connect(self.generateMenu)
+
+        # 만약 다른 클릭으로 메뉴바 생성하고 싶다면
+        # self.tableWidget.viewport().installEventFilter(self)
+
+    # installEventFilter사용시 작동(실시간을 요구하기때문에 과부하 많이 걸림)
+    def eventFilter(self, source:QtCore.QObject, event:QtCore.QEvent):    
         
-    def findButtonClick(self):
-        print("findButtonClick 클릭됨.")
-        fname = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-
-        print(fname)
-        self.targetFolderAddress.setText(fname)
-        if fname != "":
-            self.saveFolderAddress.setText(fname+"/Result")
-    def findButtonClick2(self):
-        files = self.fileDialog.getOpenFileNames(self)
-
-        for file in files[0] :
-            print(file,type(file))
-            self.targetFolderList.addItem(file)
-
-        for i in range(self.targetFolderList.count()):
-            print(self.targetFolderList.item(i).text())
-
-        pass
-        pass
-
-    def findButtonClick3(self):
-        self.fileDialog.show()
-        self.fileDialog.exec_()
+        # 마우스 더블클릭시
+        if(
+            event.type() == QtCore.QEvent.Type.MouseButtonDblClick and
+            event.buttons() == QtCore.Qt.MouseButton.LeftButton and
+            source is self.tableWidget.viewport()
+        ):
+            self.generateMenu(event.pos())
         
-        for file in self.fileDialog.selectedFiles():
-            print(type(file),file)
-            self.targetFolderList.addItem(file)
+        
+        return super(MyApp, self).eventFilter(source, event)
+            
 
-    def mergeButtonClick(self):
-        folderSearch.count = 0
+    def generateMenu(self, pos):
+        # 빈공간에서
+        if(self.tableWidget.itemAt(pos) is None):
+            self.emptymMenu = QMenu(self)
+            self.emptymMenu.addAction("추가", self.addRow)      
+            self.emptymMenu.exec_(self.tableWidget.mapToGlobal(pos)) 
+            
+        # 아이템에서
+        else:
+            self.menu = QMenu(self)
+            self.menu.addAction("삭제",lambda: self.deleteRow(pos))      
+            
+            self.menu.exec_(self.tableWidget.mapToGlobal(pos)) 
 
-        for i in range(self.targetFolderList.count()):
-            currentRootAddress = self.targetFolderList.item(i).text()
+    def addRow(self):
+        print("추가")
+        # 마지막줄에 추가하기 위함
+        rowPosition =self.tableWidget.rowCount()
+        columnPosition =self.tableWidget.columnCount()
+        
+        self.tableWidget.insertRow(rowPosition)
+        
+        # 모든 열에 세팅
+        for column in range(columnPosition):
+            self.tableWidget.setItem(rowPosition,column,QTableWidgetItem(''))
+        
+        
+    def deleteRow(self,pos):
+        print("삭제",pos)
+        self.tableWidget.removeRow(self.tableWidget.indexAt(pos).row())
+        
 
-            if currentRootAddress == "":
-                continue
-            if "Result" not in os.listdir(currentRootAddress):
-                os.mkdir(currentRootAddress+"/"+"Result")
-                
-
-            currentSaveFolder = currentRootAddress + "/Result"
-            folderSearch.merge(currentRootAddress,currentSaveFolder)
-
-        QMessageBox.about(self, 'Process Complete', '작업 완료 했습니다.')
-    def clearButtonClick(self):
-        self.targetFolderList.clear()
-        pass
-        pass
-if __name__ == "__main__":
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    myWindow = WindowClass()
-    myWindow.show()
-    app.exec_()
-
-    #folderSearch.folderSearch(rootfolder="E:\Entertainment\만화\[미나모토 아키라] 여왕 폐하의 이세계 전략")
-    #folderSearch(rootfolder="E:\Entertainment\만화\[미나모토 아키라] 여왕 폐하의 이세계 전략")
+    ex = MyApp()
+    sys.exit(app.exec_())
