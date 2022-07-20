@@ -109,7 +109,7 @@ class WindowClass(QMainWindow, form_class):
             self.logText.setText(currentRootAddress)
         
             currentSaveFolder = saveDirectory
-            folderSearch.count = 0 
+            #folderSearch.count = 0 
             folderSearch.merge(currentRootAddress,currentSaveFolder)
             progressValue = math.ceil((i+1)/self.targetFolderList.count()*100)
             self.progressBar.setValue(progressValue)

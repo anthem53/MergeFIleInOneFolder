@@ -1,1 +1,9 @@
 test/
+build/
+dist/
+main.spec
+realtest.py
+TEST.Ink
+test.py
+*.ico
+__pycache__/
